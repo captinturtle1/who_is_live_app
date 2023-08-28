@@ -1,22 +1,77 @@
 import React from 'react';
 
-import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Button } from 'react-native';
+import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Pressable } from 'react-native';
 import { styled } from "nativewind";
 import { useState, useEffect } from 'react';
 
 import AddRemove from './components/AddRemove';
+
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+import FA5Icon from 'react-native-vector-icons/FontAwesome5';
+import FIcon from 'react-native-vector-icons/Feather';
+import MIIcon from 'react-native-vector-icons/MaterialIcons';
+
+const SFAIcon = styled(FAIcon);
+const SFA5Icon = styled(FA5Icon);
+const SFIcon = styled(FIcon);
+const SMIIcon = styled(MIIcon);
+
+let apiURL = 'https://api.isanyone.live';
 
 const SView = styled(View);
 const SText = styled(Text);
 const SImage = styled(Image);
 const SScrollView = styled(ScrollView);
 const STextInput = styled(TextInput);
+const SPressable = styled(Pressable);
 
-let apiURL = '';
-if (process.env.NODE_ENV == 'production') {
-  apiURL = 'https://api.isanyone.live';
-} else {
-  apiURL = 'http://localhost:8080';
+const StreamerCard = ({dataObject}:any) => {
+  return(
+    <SView className="flex flex-row bg-blue-500 p-2 mb-2 rounded">
+      <SImage source={{ uri: dataObject.profileImageURL}} className={dataObject.live ? "w-16 h-16 rounded-full" : "w-16 h-16 rounded-full grayscale"}/>
+      <SView className='pl-2'>
+        <SText className="font-bold text-lg text-white flex gap-2">{dataObject.displayName}
+          <SText className="">
+            {dataObject.verified ? 
+              <SMIIcon 
+                name="verified" size={20}
+                color="#FFFFFF"
+              /> : <></>
+            }
+            {dataObject.platform == 0 ? 
+              <SFA5Icon 
+                name="twitch" size={20}
+                color="#FFFFFF"
+              /> : dataObject.platform == 1 ? 
+              <SFAIcon 
+                name="youtube-play"
+                size={20}
+                color="#FFFFFF"
+              /> : 
+              <SFA5Icon
+                name="kickstarter"
+                size={20}
+                color="#FFFFFF"
+              />
+            }
+          </SText>
+        </SText>
+        {dataObject.live ? 
+          <>
+            <SView className="flex flex-row gap-1">
+              <SView className="w-3 h-3 bg-red-500 rounded-full"/>
+              <SText className='text-white'>{dataObject.viewers}</SText>
+            </SView>
+            <SText className="text-white">{dataObject.streamTitle}</SText>
+          </>
+        :
+          <>
+            <SText className='text-white'>Offline</SText>
+          </>
+        }
+      </SView>
+    </SView>
+  )
 }
 
 function App(): JSX.Element {
@@ -47,6 +102,7 @@ function App(): JSX.Element {
 
     let newAllLive:any = [];
     let newAllData:any = [];
+
     // getting twitch data
     if (twitchData.length > 0) {
       setFetching(true);
@@ -167,35 +223,23 @@ function App(): JSX.Element {
       :
         <SView className="flex h-full bg-slate-800 p-2">
           <SView className='flex-grow'>
-            <SText>{twitchList}</SText>
-            <SText>{youtubeList}</SText>
-            <SText>{kickList}</SText>
+            {allData.map((dataObject:any) =>
+              <StreamerCard
+                key={dataObject.name}
+                dataObject={dataObject}
+              />
+            )}
           </SView>
           <SView className='flex flex-row gap-2'>
-            <SView className='flex-1'>
-              <Button
-                onPress={() => setIsAddRemoveOpen(true)}
-                title='Edit'
-                color='#3b82f6'
-                accessibilityLabel='Open edit panel button'
-              />
-            </SView>
-            <SView className='flex-1'>
-              <Button
-                onPress={() => setIsAddRemoveOpen(true)}
-                title='Refresh'
-                color='#3b82f6'
-                accessibilityLabel='Refresh list button'
-              />
-            </SView>
-            <SView className='flex-1'>
-              <Button
-                onPress={() => setIsAddRemoveOpen(true)}
-                title='Help'
-                color='#3b82f6'
-                accessibilityLabel='View help'
-              />
-            </SView>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
+              <SText className='text-white font-bold text-lg m-auto'>Edit</SText>
+            </SPressable>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => retrieveStreamData(twitchList, youtubeList, kickList)}>
+              <SText className='text-white font-bold text-lg m-auto'>Refresh</SText>
+            </SPressable>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsHelpOpen(true)}>
+              <SText className='text-white font-bold text-lg m-auto'>Help</SText>
+            </SPressable>
           </SView>
         </SView>
       }
