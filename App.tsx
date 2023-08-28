@@ -166,7 +166,11 @@ function App(): JSX.Element {
         />
       :
         <SView className="flex h-full bg-slate-800 p-2">
-          <SView className='flex-grow'/>
+          <SView className='flex-grow'>
+            <SText>{twitchList}</SText>
+            <SText>{youtubeList}</SText>
+            <SText>{kickList}</SText>
+          </SView>
           <SView className='flex flex-row gap-2'>
             <SView className='flex-1'>
               <Button

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Button } from 'react-native';
+import { Text, View, Image, ScrollView, TextInput, Pressable } from 'react-native';
 import { styled } from "nativewind";
 import { useState, useEffect } from 'react';
 
@@ -17,6 +17,7 @@ const SText = styled(Text);
 const SImage = styled(Image);
 const SScrollView = styled(ScrollView);
 const STextInput = styled(TextInput);
+const SPressable = styled(Pressable);
 
 const ChannelList = ({id, list, handleRemove}:any) => {
   return (
@@ -106,60 +107,64 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
   return(
       <SView className="flex h-full bg-slate-800 p-2">
         <SView className='flex-grow gap-2'>
-          <SView className='bg-slate-500'>
-            <TextInput
-              onChangeText={handleUserInput}
-              value={userInput}
-            />
+          <SText className='text-white font-bold text-xl'>Channel Name:</SText>
+          <SView className='flex flex-row'>
+            <SView className='bg-slate-500 flex-grow mr-2 rounded'>
+              <TextInput
+                onChangeText={handleUserInput}
+                value={userInput}
+                onSubmitEditing={addChannel}
+              />
+            </SView>
+            <SPressable onPress={addChannel} className='bg-blue-500 rounded flex w-16'>
+              <SText className='text-white m-auto font-bold'>Add</SText>
+            </SPressable>
           </SView>
+          <SText className='text-white font-bold text-xl'>Channel Platform:</SText>
           <SView className='flex mx-auto flex-row'>
             <SFA5Icon 
               onPress={() => setPlatformSelected(0)}
               name="twitch" size={30}
               color="#FFFFFF"
-              className='bg-[#9146FF] text-center flex-1 mr-1 rounded py-1'
+              className={platformSelected == 0 ? 
+                'bg-purple-400 -translate-y-1 text-center flex-1 mr-1 rounded py-1' : 
+                'bg-purple-500 text-center flex-1 mr-1 rounded py-1'}
             />
             <SFAIcon 
               onPress={() => setPlatformSelected(1)} 
               name="youtube-play"
               size={30}
               color="#FFFFFF"
-              className='bg-[#FF0000] text-center flex-1 mx-1 rounded py-1'
+              className={platformSelected == 1 ? 
+                'bg-red-400 -translate-y-1 text-center flex-1 mr-1 rounded py-1' : 
+                'bg-red-500 text-center flex-1 mr-1 rounded py-1'}
             />
             <SFA5Icon
               onPress={() => setPlatformSelected(2)}
               name="kickstarter"
               size={30}
               color="#FFFFFF"
-              className='bg-[#53FC18] text-center flex-1 ml-1 rounded py-1'
+              className={platformSelected == 2 ? 
+                'bg-green-400 -translate-y-1 text-center flex-1 mr-1 rounded py-1' : 
+                'bg-green-500 text-center flex-1 mr-1 rounded py-1'}
             />
           </SView>
-          <SView className='flex'>
-            <Button
-              onPress={() => null}
-              title='Add'
-              color='#3b82f6'
-              accessibilityLabel='Add provided channel to the list'
-            />
+          <SView className=''>
+            <SText className='text-white font-bold text-xl mx-auto'>Twitch:</SText>
+            <SText className='text-white mx-auto'>{addedTwitch}</SText>
+            <SText className='text-white font-bold text-xl mx-auto'>Youtube:</SText>
+            <SText className='text-white mx-auto'>{addedYoutube}</SText>
+            <SText className='text-white font-bold text-xl mx-auto'>Kick:</SText>
+            <SText className='text-white mx-auto'>{addedKick}</SText>
           </SView>
         </SView>
         <SView className='flex flex-row gap-2'>
-          <SView className='flex-1'>
-            <Button
-              onPress={() => setIsAddRemoveOpen(false)}
-              title='Cancel'
-              color='#3b82f6'
-              accessibilityLabel='Open edit panel button'
-            />
-          </SView>
-          <SView className='flex-1'>
-            <Button
-              onPress={() => setIsAddRemoveOpen(false)}
-              title='Save'
-              color='#3b82f6'
-              accessibilityLabel='Refresh list button'
-            />
-          </SView>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(false)}>
+              <SText className='text-white font-bold text-lg m-auto'>Cancel</SText>
+            </SPressable>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(false)}>
+              <SText className='text-white font-bold text-lg m-auto'>Save</SText>
+            </SPressable>
         </SView>
       </SView>
   )
