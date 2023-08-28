@@ -21,14 +21,16 @@ const SPressable = styled(Pressable);
 
 const ChannelList = ({id, list, handleRemove}:any) => {
   return (
-    <SView className="w-32 flex flex-col gap-2">
-      <SView>{id === 0 ? 'Twitch' : id === 1 ? 'Youtube' : 'Kick'}</SView>
-      {list.map((value:string, index:number) => 
-        <SView key={value} className="flex bg-blue-500 px-2 rounded">
-          <SView className="mr-auto my-auto overflow-hidden text-sm">{value}</SView>
-          <SFIcon name="x" size={30} onPress={() => handleRemove(id, index)} className="m-1 text-red-500 hover:text-red-600 transition-all font-black cursor-pointer"/>
-        </SView>
-      )}
+    <SView className='mt-2'>
+      <SText className='text-white font-bold text-xl mb-2 mx-auto'>{id === 0 ? 'Twitch' : id === 1 ? 'Youtube' : 'Kick'}</SText>
+      <SScrollView className='flex gap-1 h-[150px] mx-8'>
+        {list.map((value:string, index:number) => 
+          <SView key={value} className="flex flex-row bg-blue-500 px-2 rounded">
+            <SText className="mr-auto my-auto text-white">{value}</SText>
+            <SFIcon name="x" size={30} onPress={() => handleRemove(id, index)} className="text-red-500 m-1"/>
+          </SView>
+        )}
+      </SScrollView>
     </SView>
   )
 }
@@ -95,10 +97,6 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
     }
   }
 
-  const handleCancel = () => {
-    setIsAddRemoveOpen(false)
-  }
-
   const handleSave = () => {
     setLists([addedTwitch, addedYoutube, addedKick]);
     setIsAddRemoveOpen(false);
@@ -110,10 +108,13 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
           <SText className='text-white font-bold text-xl'>Channel Name:</SText>
           <SView className='flex flex-row'>
             <SView className='bg-slate-500 flex-grow mr-2 rounded'>
-              <TextInput
+              <STextInput
                 onChangeText={handleUserInput}
                 value={userInput}
                 onSubmitEditing={addChannel}
+                placeholder="Enter Channel Name"
+                placeholderTextColor="#94a3b8"
+                className='p-2 text-white text-lg'
               />
             </SView>
             <SPressable onPress={addChannel} className='bg-blue-500 rounded flex w-16'>
@@ -149,20 +150,17 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
                 'bg-green-500 text-center flex-1 mr-1 rounded py-1'}
             />
           </SView>
-          <SView className=''>
-            <SText className='text-white font-bold text-xl mx-auto'>Twitch:</SText>
-            <SText className='text-white mx-auto'>{addedTwitch}</SText>
-            <SText className='text-white font-bold text-xl mx-auto'>Youtube:</SText>
-            <SText className='text-white mx-auto'>{addedYoutube}</SText>
-            <SText className='text-white font-bold text-xl mx-auto'>Kick:</SText>
-            <SText className='text-white mx-auto'>{addedKick}</SText>
+          <SView>
+            <ChannelList id={0} list={addedTwitch} handleRemove={handleRemove}/>
+            <ChannelList id={1} list={addedYoutube} handleRemove={handleRemove}/>
+            <ChannelList id={2} list={addedKick} handleRemove={handleRemove}/>
           </SView>
         </SView>
         <SView className='flex flex-row gap-2'>
             <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(false)}>
               <SText className='text-white font-bold text-lg m-auto'>Cancel</SText>
             </SPressable>
-            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(false)}>
+            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={handleSave}>
               <SText className='text-white font-bold text-lg m-auto'>Save</SText>
             </SPressable>
         </SView>
