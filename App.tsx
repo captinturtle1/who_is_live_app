@@ -25,50 +25,57 @@ const SScrollView = styled(ScrollView);
 const STextInput = styled(TextInput);
 const SPressable = styled(Pressable);
 
+// some scuffed styling in this component, lots of weird padding issues i couldn't figure out :/
 const StreamerCard = ({dataObject}:any) => {
   return(
-    <SView className="flex flex-row bg-blue-500 p-2 mb-2 rounded">
+    <SView className="flex flex-row bg-blue-500 rounded mb-2 p-2">
       <SImage source={{ uri: dataObject.profileImageURL}} className={dataObject.live ? "w-16 h-16 rounded-full" : "w-16 h-16 rounded-full grayscale"}/>
-      <SView className='pl-2'>
-        <SText className="font-bold text-lg text-white flex gap-2">{dataObject.displayName}
-          <SText className="">
-            {dataObject.verified ? 
-              <SMIIcon 
-                name="verified" size={20}
-                color="#FFFFFF"
-              /> : <></>
-            }
-            {dataObject.platform == 0 ? 
-              <SFA5Icon 
-                name="twitch" size={20}
-                color="#FFFFFF"
-              /> : dataObject.platform == 1 ? 
-              <SFAIcon 
-                name="youtube-play"
-                size={20}
-                color="#FFFFFF"
-              /> : 
-              <SFA5Icon
-                name="kickstarter"
-                size={20}
-                color="#FFFFFF"
-              />
-            }
-          </SText>
-        </SText>
-        {dataObject.live ? 
-          <>
-            <SView className="flex flex-row gap-1">
-              <SView className="w-3 h-3 bg-red-500 rounded-full"/>
-              <SText className='text-white'>{dataObject.viewers}</SText>
-            </SView>
-            <SText className="text-white">{dataObject.streamTitle}</SText>
-          </>
-        :
-          <>
-            <SText className='text-white'>Offline</SText>
-          </>
-        }
+      {/* scuffed padding */}
+      <SView className='w-1'/>
+      <SView>
+        <SView className='flex flex-row'>
+          <SText className="font-bold text-lg text-white mr-1">{dataObject.displayName}</SText>
+            <SText className='my-auto'>
+              {dataObject.verified ? 
+                <SMIIcon 
+                  name="verified" size={15}
+                  color="#FFFFFF"
+                /> : <></>
+              }
+              {/*scuffed padding*/}
+              <SView className='w-1'/>
+              {dataObject.platform == 0 ? 
+                <SFA5Icon 
+                  name="twitch" size={15}
+                  color="#FFFFFF"
+                /> : dataObject.platform == 1 ? 
+                <SFAIcon 
+                  name="youtube-play"
+                  size={15}
+                  color="#FFFFFF"
+                /> : 
+                <SFA5Icon
+                  name="kickstarter"
+                  size={15}
+                  color="#FFFFFF"
+                />
+              }
+            </SText>
+          </SView>
+          {dataObject.live ? 
+            <>
+              <SView className="flex flex-row">
+                <SView className="my-auto mr-1 w-3 h-3 bg-red-500 rounded-full"/>
+                <SText className='text-white'>{dataObject.viewers}</SText>
+              </SView>
+              {/*scuffed padding*/}
+              <SText className="text-white max-w-[78vw]">{dataObject.streamTitle}</SText>
+            </>
+          :
+            <>
+              <SText className='text-white'>Offline</SText>
+            </>
+          }
       </SView>
     </SView>
   )
@@ -222,15 +229,15 @@ function App(): JSX.Element {
         />
       :
         <SView className="flex h-full bg-slate-800 p-2">
-          <SView className='flex-grow'>
+          <SScrollView className='flex-grow'>
             {allData.map((dataObject:any) =>
               <StreamerCard
-                key={dataObject.name}
+                key={dataObject.name + dataObject.platform}
                 dataObject={dataObject}
               />
             )}
-          </SView>
-          <SView className='flex flex-row gap-2'>
+          </SScrollView>
+          <SView className='flex flex-row gap-2 mt-1'>
             <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
               <SText className='text-white font-bold text-lg m-auto'>Edit</SText>
             </SPressable>
