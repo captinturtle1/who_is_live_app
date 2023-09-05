@@ -1,8 +1,10 @@
 import React from 'react';
 
-import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Pressable } from 'react-native';
+import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Pressable, ActivityIndicator, Switch } from 'react-native';
 import { styled } from "nativewind";
 import { useState, useEffect } from 'react';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AddRemove from './components/AddRemove';
 
@@ -10,11 +12,13 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import FA5Icon from 'react-native-vector-icons/FontAwesome5';
 import FIcon from 'react-native-vector-icons/Feather';
 import MIIcon from 'react-native-vector-icons/MaterialIcons';
+import EIcon from 'react-native-vector-icons/EvilIcons';
 
 const SFAIcon = styled(FAIcon);
 const SFA5Icon = styled(FA5Icon);
 const SFIcon = styled(FIcon);
 const SMIIcon = styled(MIIcon);
+const SEIcon = styled(EIcon);
 
 let apiURL = 'https://api.isanyone.live';
 
@@ -87,7 +91,6 @@ function App(): JSX.Element {
   const [kickList, setKickList] = useState<string[]>([]);
 
   const [isAddRemoveOpen, setIsAddRemoveOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const [allLive, setAllLive] = useState<any>([]);
   const [allData, setAllData] = useState<any>([]);
@@ -96,10 +99,52 @@ function App(): JSX.Element {
 
   const [displayOffline, setDisplayOffline] = useState(true);
 
+  useEffect(() => {
+    getData().then((response:any) => {
+      retrieveStreamData(response.twitchData, response.youtubeData, response.kickData)
+    }).catch(console.log);
+  }, [])
+
+  const storeData = async (value:any) => {
+    return new Promise(async (res, rej) => {
+      try {
+        const jsonValue = JSON.stringify(value);
+        await AsyncStorage.setItem('user-data', jsonValue);
+        res({status: 'Success'});
+      } catch (err) {
+        rej(err);
+      }
+    })
+  };
+  
+  const getData = async () => {
+    return new Promise(async (res, rej) => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('user-data');
+        if (jsonValue) {
+          res(JSON.parse(jsonValue));
+        } else {
+          rej({error: 'No data'})
+        }
+      } catch (err) {
+        rej(err);
+      }
+    })
+  };
+
   const setLists = (newData:any) => {
     setTwitchList([...newData[0]]);
     setYoutubeList([...newData[1]]);
     setKickList([...newData[2]]);
+
+    let data = {
+      twitchData: newData[0],
+      youtubeData: newData[1],
+      kickData: newData[2],
+      number: 1
+    }
+    storeData(data);
+    retrieveStreamData(newData[0], newData[1], newData[2]);
   }
 
   const retrieveStreamData = (twitchData:string[], youtubeData:string[], kickData:string[]) => {
@@ -230,12 +275,34 @@ function App(): JSX.Element {
       :
         <SView className="flex h-full bg-slate-800 p-2">
           <SScrollView className='flex-grow'>
-            {allData.map((dataObject:any) =>
-              <StreamerCard
-                key={dataObject.name + dataObject.platform}
-                dataObject={dataObject}
-              />
+            {displayOffline ? (
+              <>
+                {allData.map((dataObject:any) =>
+                  <StreamerCard
+                    key={dataObject.name + dataObject.platform}
+                    dataObject={dataObject}
+                  />
+                )}
+              </>
+            ):(
+              <>
+                {allLive.map((dataObject:any) =>
+                  <StreamerCard
+                    key={dataObject.name + dataObject.platform}
+                    dataObject={dataObject}
+                  />
+                )}
+              </>
             )}
+            {fetching ? <ActivityIndicator size='large' color='#3b82f6'/> : <></>}
+            <SText className="mx-auto text-white font-bold mt-5">Display Offline</SText>
+            <SPressable onPress={() => setDisplayOffline(!displayOffline)} className={displayOffline ? 
+              "w-12 h-6 bg-blue-500 flex flex-row mx-auto mt-2 rounded-full cursor-pointer" : 
+              "w-12 h-6 bg-red-400 flex flex-row mx-auto mt-2 rounded-full cursor-pointer"}
+            >
+              <SView className={displayOffline ? "flex-grow" : ""}/>
+              <SView className="text-white bg-white rounded-full w-6 h-6"/>
+            </SPressable>
           </SScrollView>
           <SView className='flex flex-row gap-2 mt-1'>
             <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
@@ -243,9 +310,6 @@ function App(): JSX.Element {
             </SPressable>
             <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => retrieveStreamData(twitchList, youtubeList, kickList)}>
               <SText className='text-white font-bold text-lg m-auto'>Refresh</SText>
-            </SPressable>
-            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsHelpOpen(true)}>
-              <SText className='text-white font-bold text-lg m-auto'>Help</SText>
             </SPressable>
           </SView>
         </SView>
