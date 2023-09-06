@@ -101,7 +101,17 @@ function App(): JSX.Element {
 
   useEffect(() => {
     getData().then((response:any) => {
-      retrieveStreamData(response.twitchData, response.youtubeData, response.kickData)
+      if (response.listData.length != 0) {
+        setTwitchList([...response.listData.twitchData]);
+        setYoutubeList([...response.listData.youtubeData]);
+        setKickList([...response.listData.kickData]);
+        
+        retrieveStreamData(response.listData.twitchData, response.listData.youtubeData, response.listData.kickData);
+      }
+      if (response.settingsData.length != 0) {
+        setDisplayOffline(response.settingsData.displayOffline)
+      }
+
     }).catch(console.log);
   }, [])
 
@@ -120,17 +130,35 @@ function App(): JSX.Element {
   const getData = async () => {
     return new Promise(async (res, rej) => {
       try {
-        const jsonValue = await AsyncStorage.getItem('user-data');
-        if (jsonValue) {
-          res(JSON.parse(jsonValue));
-        } else {
-          rej({error: 'No data'})
+        let returnObject = {
+          listData: {},
+          settingsData: {}
         }
+
+        let listData = await AsyncStorage.getItem('user-data');
+        let settingsData = await AsyncStorage.getItem('user-settings');
+        if (listData) {
+          returnObject.listData = JSON.parse(listData)
+        }
+        if (settingsData) {
+          returnObject.settingsData = JSON.parse(settingsData)
+        }
+        res(returnObject);
       } catch (err) {
         rej(err);
       }
     })
   };
+
+  const handleToggleViewOffline = async () => {
+    let optionsObject = {
+      displayOffline: !displayOffline
+    };
+
+    setDisplayOffline(!displayOffline);
+    const jsonValue = JSON.stringify(optionsObject);
+    await AsyncStorage.setItem('user-settings', jsonValue);
+  }
 
   const setLists = (newData:any) => {
     setTwitchList([...newData[0]]);
@@ -155,6 +183,8 @@ function App(): JSX.Element {
     let newAllLive:any = [];
     let newAllData:any = [];
 
+    setAllData([...newAllData]);
+    setAllLive([...newAllLive]);
     // getting twitch data
     if (twitchData.length > 0) {
       setFetching(true);
@@ -296,7 +326,7 @@ function App(): JSX.Element {
             )}
             {fetching ? <ActivityIndicator size='large' color='#3b82f6'/> : <></>}
             <SText className="mx-auto text-white font-bold mt-5">Display Offline</SText>
-            <SPressable onPress={() => setDisplayOffline(!displayOffline)} className={displayOffline ? 
+            <SPressable onPress={handleToggleViewOffline} className={displayOffline ? 
               "w-12 h-6 bg-blue-500 flex flex-row mx-auto mt-2 rounded-full cursor-pointer" : 
               "w-12 h-6 bg-red-400 flex flex-row mx-auto mt-2 rounded-full cursor-pointer"}
             >
