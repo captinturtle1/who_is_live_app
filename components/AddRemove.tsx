@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_FORM_ACTIONS, isValidElement } from 'react';
 
-import { Text, View, Image, ScrollView, TextInput, Pressable } from 'react-native';
+import { Text, View, ScrollView, TextInput, Pressable } from 'react-native';
 import { styled } from "nativewind";
 import { useState, useEffect } from 'react';
 
@@ -14,7 +14,6 @@ const SFIcon = styled(FIcon);
 
 const SView = styled(View);
 const SText = styled(Text);
-const SImage = styled(Image);
 const SScrollView = styled(ScrollView);
 const STextInput = styled(TextInput);
 const SPressable = styled(Pressable);
@@ -52,11 +51,53 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
     setAddedKick([...currentLists[2]]);
   }, [])
 
+  const handleSetPlatform = (platform: number) => {
+    setPlatformSelected(platform);
+    if (platform == 0) {
+      if (!addedTwitch.includes(userInput)) {
+        setValidInput(true);
+      } else {
+        setValidInput(false);
+      }
+    } else if (platform == 1) {
+      if (!addedYoutube.includes(userInput)) {
+        setValidInput(true);
+      } else {
+        setValidInput(false);
+      }
+    } else {
+      if (!addedKick.includes(userInput)) {
+        setValidInput(true);
+      } else {
+        setValidInput(false);
+      }
+    }
+  }
+
   const handleUserInput = (e:any) => {
     setUserInput(e);
+    setValidInput(false);
     if (e) {
       if (e.match(/^[a-zA-Z0-9_]+$/i)) {
-        setValidInput(true);
+        if (platformSelected == 0) {
+          if (!addedTwitch.includes(e)) {
+            setValidInput(true);
+          } else {
+            setValidInput(false);
+          }
+        } else if (platformSelected == 1) {
+          if (!addedYoutube.includes(e)) {
+            setValidInput(true);
+          } else {
+            setValidInput(false);
+          }
+        } else {
+          if (!addedKick.includes(e)) {
+            setValidInput(true);
+          } else {
+            setValidInput(false);
+          }
+        }
       } else {
         setValidInput(false);
       }
@@ -66,18 +107,20 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
   const addChannel = () => {
     setUserInput('');
     let newChannels = [];
-    if (platformSelected === 0) {
-      newChannels = addedTwitch;
-      newChannels.push(userInput);
-      setAddedTwitch([...newChannels]);
-    } else if (platformSelected === 1) {
-      newChannels = addedYoutube
-      newChannels.push(userInput);
-      setAddedYoutube([...newChannels]);
-    } else if (platformSelected === 2) {
-      newChannels = addedKick;
-      newChannels.push(userInput);
-      setAddedKick([...newChannels]);
+    if (validInput) {
+      if (platformSelected === 0) {
+        newChannels = addedTwitch;
+        newChannels.push(userInput);
+        setAddedTwitch([...newChannels]);
+      } else if (platformSelected === 1) {
+        newChannels = addedYoutube
+        newChannels.push(userInput);
+        setAddedYoutube([...newChannels]);
+      } else if (platformSelected === 2) {
+        newChannels = addedKick;
+        newChannels.push(userInput);
+        setAddedKick([...newChannels]);
+      }
     }
   }
 
@@ -117,14 +160,14 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
                 className='p-2 text-white text-lg'
               />
             </SView>
-            <SPressable onPress={addChannel} className='bg-blue-500 rounded flex w-16'>
+            <SPressable onPress={validInput ? addChannel : null} className={validInput ? 'bg-blue-500 rounded flex w-16' : 'bg-gray-500 text-gray-300 rounded flex w-16'}>
               <SText className='text-white m-auto font-bold'>Add</SText>
             </SPressable>
           </SView>
           <SText className='text-white font-bold text-xl'>Channel Platform:</SText>
           <SView className='flex mx-auto flex-row'>
             <SFA5Icon 
-              onPress={() => setPlatformSelected(0)}
+              onPress={() => handleSetPlatform(0)}
               name="twitch" size={30}
               color="#FFFFFF"
               className={platformSelected == 0 ? 
@@ -132,7 +175,7 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
                 'bg-purple-500 text-center flex-1 mr-1 rounded py-1'}
             />
             <SFAIcon 
-              onPress={() => setPlatformSelected(1)} 
+              onPress={() => handleSetPlatform(1)} 
               name="youtube-play"
               size={30}
               color="#FFFFFF"
@@ -141,7 +184,7 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
                 'bg-red-500 text-center flex-1 mr-1 rounded py-1'}
             />
             <SFA5Icon
-              onPress={() => setPlatformSelected(2)}
+              onPress={() => handleSetPlatform(2)}
               name="kickstarter"
               size={30}
               color="#FFFFFF"
