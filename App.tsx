@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Pressable, ActivityIndicator, Switch } from 'react-native';
+import { SafeAreaView, Text, View, Image, ScrollView, TextInput, Pressable, ActivityIndicator, Linking } from 'react-native';
 import { styled } from "nativewind";
 import { useState, useEffect } from 'react';
 
@@ -31,8 +31,18 @@ const SPressable = styled(Pressable);
 
 // some scuffed styling in this component, lots of weird padding issues i couldn't figure out :/
 const StreamerCard = ({dataObject}:any) => {
+  const loadInBrowser = (url: string) => {
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+  };
+
   return(
-    <SView className="flex flex-row bg-blue-500 rounded mb-2 p-2">
+    <SPressable 
+      onPress={() => loadInBrowser(dataObject.platform == 0 ? 
+        `https://twitch.tv/${dataObject.name}` : dataObject.platform == 1 ? 
+        `https://youtube.com/@${dataObject.name}` : 
+        `https://kick.com/${dataObject.name}`)}
+      className="flex flex-row bg-blue-500 rounded mb-2 p-2"
+    >
       <SImage source={{ uri: dataObject.profileImageURL}} className={dataObject.live ? "w-16 h-16 rounded-full" : "w-16 h-16 rounded-full grayscale"}/>
       {/* scuffed padding */}
       <SView className='w-1'/>
@@ -81,7 +91,7 @@ const StreamerCard = ({dataObject}:any) => {
             </>
           }
       </SView>
-    </SView>
+    </SPressable>
   )
 }
 
