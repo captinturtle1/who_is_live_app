@@ -20,17 +20,14 @@ const SPressable = styled(Pressable);
 
 const ChannelList = ({id, list, handleRemove}:any) => {
   return (
-    <SView className='mt-2'>
-      <SText className='text-white font-bold text-xl mb-2 mx-auto'>{id === 0 ? 'Twitch' : id === 1 ? 'Youtube' : 'Kick'}</SText>
-      <SScrollView className='flex gap-1 h-[150px] mx-8'>
+      <SScrollView className='mx-8 flex-1'>
         {list.map((value:string, index:number) => 
-          <SView key={value} className="flex flex-row bg-blue-500 px-2 rounded">
+          <SView key={value} className="mt-1 flex flex-row bg-blue-500 px-2 rounded">
             <SText className="mr-auto my-auto text-white">{value}</SText>
             <SFIcon name="x" size={30} onPress={() => handleRemove(id, index)} className="text-red-400 m-1"/>
           </SView>
         )}
       </SScrollView>
-    </SView>
   )
 }
 
@@ -136,23 +133,7 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
   return(
       <SView className="flex h-full bg-slate-800 p-2">
         <SView className='flex-grow gap-2'>
-          <SText className='text-white font-bold text-xl'>Channel Name:</SText>
-          <SView className='flex flex-row'>
-            <SView className='bg-slate-500 flex-grow mr-2 rounded'>
-              <STextInput
-                onChangeText={handleUserInput}
-                value={userInput}
-                onSubmitEditing={addChannel}
-                placeholder="Enter Channel Name"
-                placeholderTextColor="#94a3b8"
-                className='p-2 text-white text-lg'
-              />
-            </SView>
-            <SPressable onPress={validInput ? addChannel : null} className={validInput ? 'bg-blue-500 rounded flex w-16' : 'bg-gray-500 text-gray-300 rounded flex w-16'}>
-              <SText className='text-white m-auto font-bold'>Add</SText>
-            </SPressable>
-          </SView>
-          <SText className='text-white font-bold text-xl'>Channel Platform:</SText>
+          <SText className='text-white font-bold text-xl'>Select Platform:</SText>
           <SView className='flex mx-auto flex-row'>
             <SFA5Icon 
               onPress={() => handleSetPlatform(0)}
@@ -181,13 +162,28 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
                 'bg-green-500 text-center flex-1 mr-1 rounded py-1'}
             />
           </SView>
-          <SView>
-            <ChannelList id={0} list={addedTwitch} handleRemove={handleRemove}/>
-            <ChannelList id={1} list={addedYoutube} handleRemove={handleRemove}/>
-            <ChannelList id={2} list={addedKick} handleRemove={handleRemove}/>
+          <SText className='text-white font-bold text-xl'>Channel Name:</SText>
+          <SView className='flex flex-row'>
+            <SView className='bg-slate-500 flex-grow mr-2 rounded'>
+              <STextInput
+                onChangeText={handleUserInput}
+                value={userInput}
+                onSubmitEditing={addChannel}
+                placeholder="Enter Channel Name"
+                placeholderTextColor="#94a3b8"
+                className='p-2 text-white text-lg'
+              />
+            </SView>
+            <SPressable onPress={validInput ? addChannel : null} className={validInput ? 'bg-blue-500 rounded flex w-16' : 'bg-gray-500 text-gray-300 rounded flex w-16'}>
+              <SText className='text-white m-auto font-bold'>Add</SText>
+            </SPressable>
           </SView>
+          <SView>
+            <SText className='text-white font-bold text-xl mb-2 mx-auto'>{platformSelected === 0 ? 'Twitch List:' : platformSelected === 1 ? 'Youtube List:' : 'Kick List:'}</SText>
+          </SView>
+          <ChannelList id={platformSelected} list={platformSelected == 0 ? addedTwitch : platformSelected == 1 ? addedYoutube : addedKick} handleRemove={handleRemove}/>
         </SView>
-        <SView className='flex flex-row gap-2'>
+        <SView className='flex flex-row gap-2 mt-[1px]'>
             <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(false)}>
               <SText className='text-white font-bold text-lg m-auto'>Cancel</SText>
             </SPressable>
