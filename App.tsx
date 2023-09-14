@@ -340,7 +340,7 @@ function App(): JSX.Element {
                 )}
               </>
             )}
-            <SText className="mx-auto text-white font-bold mt-5">Display Offline</SText>
+            <SText className="mx-auto text-white font-bold mt-1">Display Offline</SText>
             <SPressable onPress={handleToggleViewOffline} className={displayOffline ? 
               "w-12 h-6 bg-blue-500 flex flex-row mx-auto mt-2 rounded-full cursor-pointer" : 
               "w-12 h-6 bg-red-400 flex flex-row mx-auto mt-2 rounded-full cursor-pointer"}
@@ -349,11 +349,9 @@ function App(): JSX.Element {
               <SView className="text-white bg-white rounded-full w-6 h-6"/>
             </SPressable>
           </SScrollView>
-          <SView className='flex flex-row gap-2 mt-1'>
-            <SPressable className='flex-1 bg-blue-500 p-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
-              <SText className='text-white font-bold text-lg m-auto'>Edit</SText>
-            </SPressable>
-          </SView>
+          <SPressable className='bg-blue-500 p-2 mt-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
+            <SText className='text-white font-bold text-lg m-auto'>Edit</SText>
+          </SPressable>
         </SView>
       }
     </SafeAreaView>
