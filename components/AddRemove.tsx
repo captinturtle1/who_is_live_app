@@ -26,7 +26,7 @@ const ChannelList = ({id, list, handleRemove}:any) => {
         {list.map((value:string, index:number) => 
           <SView key={value} className="flex flex-row bg-blue-500 px-2 rounded">
             <SText className="mr-auto my-auto text-white">{value}</SText>
-            <SFIcon name="x" size={30} onPress={() => handleRemove(id, index)} className="text-red-500 m-1"/>
+            <SFIcon name="x" size={30} onPress={() => handleRemove(id, index)} className="text-red-400 m-1"/>
           </SView>
         )}
       </SScrollView>
@@ -51,72 +51,60 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
     setAddedKick([...currentLists[2]]);
   }, [])
 
+  const valdiateInput = (input: string, platform: number) => {
+    if (input) {
+      if (input.match(/^[a-zA-Z0-9_]+$/i)) {
+        if (platform == 0) {
+          if (!addedTwitch.includes(input)) {
+            return true;
+          }
+        } else if (platform == 1) {
+          if (!addedYoutube.includes(input)) {
+            return true;
+          }
+        } else {
+          if (!addedKick.includes(input)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   const handleSetPlatform = (platform: number) => {
     setPlatformSelected(platform);
-    if (platform == 0) {
-      if (!addedTwitch.includes(userInput)) {
-        setValidInput(true);
-      } else {
-        setValidInput(false);
-      }
-    } else if (platform == 1) {
-      if (!addedYoutube.includes(userInput)) {
-        setValidInput(true);
-      } else {
-        setValidInput(false);
-      }
+    if (valdiateInput(userInput, platform)) {
+      setValidInput(true);
     } else {
-      if (!addedKick.includes(userInput)) {
-        setValidInput(true);
-      } else {
-        setValidInput(false);
-      }
+      setValidInput(false);
+      
     }
   }
 
   const handleUserInput = (e:any) => {
     setUserInput(e);
-    setValidInput(false);
-    if (e) {
-      if (e.match(/^[a-zA-Z0-9_]+$/i)) {
-        if (platformSelected == 0) {
-          if (!addedTwitch.includes(e)) {
-            setValidInput(true);
-          } else {
-            setValidInput(false);
-          }
-        } else if (platformSelected == 1) {
-          if (!addedYoutube.includes(e)) {
-            setValidInput(true);
-          } else {
-            setValidInput(false);
-          }
-        } else {
-          if (!addedKick.includes(e)) {
-            setValidInput(true);
-          } else {
-            setValidInput(false);
-          }
-        }
-      } else {
-        setValidInput(false);
-      }
+    if (valdiateInput(e, platformSelected)) {
+      setValidInput(true);
+    } else {
+      setValidInput(false)
     }
   }
 
   const addChannel = () => {
     setUserInput('');
+    setValidInput(false);
     let newChannels = [];
-    if (validInput) {
-      if (platformSelected === 0) {
+    if (valdiateInput(userInput, platformSelected)) {
+      if (platformSelected == 0) {
         newChannels = addedTwitch;
         newChannels.push(userInput);
         setAddedTwitch([...newChannels]);
-      } else if (platformSelected === 1) {
+      } else if (platformSelected == 1) {
         newChannels = addedYoutube
         newChannels.push(userInput);
         setAddedYoutube([...newChannels]);
-      } else if (platformSelected === 2) {
+      } else if (platformSelected == 2) {
         newChannels = addedKick;
         newChannels.push(userInput);
         setAddedKick([...newChannels]);
