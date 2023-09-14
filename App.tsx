@@ -80,7 +80,7 @@ const StreamerCard = ({dataObject}:any) => {
             <>
               <SView className="flex flex-row">
                 <SView className="my-auto mr-1 w-3 h-3 bg-red-500 rounded-full"/>
-                <SText className='text-white'>{dataObject.viewers}</SText>
+                <SText className='text-white'>{dataObject.viewers}{dataObject.catagory ? (<SText> • {dataObject.catagory}</SText>):(<SView></SView>)}</SText>
               </SView>
               {/*scuffed padding*/}
               <SText className="text-white max-w-[78vw]">{dataObject.streamTitle}</SText>
