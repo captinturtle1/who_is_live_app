@@ -29,8 +29,16 @@ const SScrollView = styled(ScrollView);
 const STextInput = styled(TextInput);
 const SPressable = styled(Pressable);
 
+const calculateTime = (startedAt:number) => {
+  let now = Date.now() / 1000;
+  let elapsedTime = Math.round(now - startedAt);
+  let date = new Date(null);
+  date.setSeconds(elapsedTime);
+  return date.toISOString().slice(11, 19);
+}
+
 // some scuffed styling in this component, lots of weird padding issues i couldn't figure out :/
-const StreamerCard = ({dataObject}:any) => {
+const StreamerCard = ({dataObject, displayThumbnails}:any) => {
   const loadInBrowser = (url: string) => {
     Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
   };
@@ -38,14 +46,17 @@ const StreamerCard = ({dataObject}:any) => {
   return(
     <SPressable 
       onPress={() => loadInBrowser(dataObject.streamURL)}
-      className="flex flex-row bg-blue-500 rounded mb-2 p-2"
+      className="bg-blue-500 rounded p-2 mb-2"
     >
-      <SImage source={{ uri: dataObject.profileImageURL}} className={dataObject.live ? "w-16 h-16 rounded-full" : "w-16 h-16 rounded-full grayscale"}/>
-      {/* scuffed padding */}
-      <SView className='w-1'/>
-      <SView>
-        <SView className='flex flex-row'>
-          <SText className="font-bold text-lg text-white mr-1">{dataObject.displayName}</SText>
+      <SView className='flex flex-row'>
+        <SImage
+          source={{ uri: dataObject.profileImageURL}}
+          className="w-16 h-16 rounded-full mr-2"
+        />
+        <SView>
+          <SView className='flex flex-row'>
+            <SText className="font-bold text-lg text-white">{dataObject.displayName}</SText>
+            <SView className='w-1'/>
             <SText className='my-auto'>
               {dataObject.verified ? 
                 <SMIIcon 
@@ -53,7 +64,6 @@ const StreamerCard = ({dataObject}:any) => {
                   color="#FFFFFF"
                 /> : <></>
               }
-              {/*scuffed padding*/}
               <SView className='w-1'/>
               {dataObject.platform == 0 ? 
                 <SFA5Icon 
@@ -72,22 +82,33 @@ const StreamerCard = ({dataObject}:any) => {
                 />
               }
             </SText>
-          </SView>
-          {dataObject.live ? 
-            <>
-              <SView className="flex flex-row">
-                <SView className="my-auto mr-1 w-3 h-3 bg-red-500 rounded-full"/>
-                <SText className='text-white'>{dataObject.viewers}{dataObject.catagory ? (<SText> • {dataObject.catagory}</SText>):(<SView></SView>)}</SText>
-              </SView>
-              {/*scuffed padding*/}
-              <SText className="text-white max-w-[78vw]">{dataObject.streamTitle}</SText>
-            </>
-          :
-            <>
-              <SText className='text-white'>Offline</SText>
-            </>
-          }
+            </SView>
+            {dataObject.live ? 
+              <>
+                <SView className="flex flex-row">
+                  <SView className="my-auto w-3 h-3 bg-red-500 rounded-full mr-1"/>
+                  <SText className='text-white font-bold'>{dataObject.viewers}{dataObject.catagory ? (<SText> • {dataObject.catagory}</SText>):(<SView></SView>)}</SText>
+                </SView>
+                {dataObject.platform != 1 ? <SText className='text-white'>{calculateTime(dataObject.streamStartTime)}</SText>:<></>}
+              </>
+            :
+              <>
+                <SText className='text-white'>Offline</SText>
+              </>
+            }
+        </SView>
       </SView>
+      {dataObject.live ? 
+      <>
+        <SText className="text-white flex-1 flex-wrap my-1">{dataObject.streamTitle}</SText>
+        {displayThumbnails ? 
+          <SImage
+            source={{ uri: dataObject.streamThumbnail}}
+            resizeMode='cover'
+            className='aspect-[16/9] rounded'
+          />
+        : <></>}
+      </> : <></>}
     </SPressable>
   )
 }
@@ -105,6 +126,7 @@ function App(): JSX.Element {
   const [fetching, setFetching] = useState(false);
 
   const [displayOffline, setDisplayOffline] = useState(true);
+  const [displayThumbnails, setDisplayThumbnails] = useState(true);
 
   useEffect(() => {
     getData().then((response:any) => {
@@ -116,7 +138,8 @@ function App(): JSX.Element {
         retrieveStreamData(response.listData.twitchData, response.listData.youtubeData, response.listData.kickData);
       }
       if (response.settingsData.length != 0) {
-        setDisplayOffline(response.settingsData.displayOffline)
+        setDisplayOffline(response.settingsData.displayOffline);
+        setDisplayThumbnails(response.settingsData.displayThumbnails);
       }
 
     }).catch(console.log);
@@ -159,10 +182,22 @@ function App(): JSX.Element {
 
   const handleToggleViewOffline = async () => {
     let optionsObject = {
-      displayOffline: !displayOffline
+      displayOffline: !displayOffline,
+      displayThumbnails: displayThumbnails
     };
 
     setDisplayOffline(!displayOffline);
+    const jsonValue = JSON.stringify(optionsObject);
+    await AsyncStorage.setItem('user-settings', jsonValue);
+  }
+
+  const handleThumbnailToggle = async () => {
+    let optionsObject = {
+      displayOffline: displayOffline,
+      displayThumbnails: !displayThumbnails
+    };
+
+    setDisplayThumbnails(!displayThumbnails);
     const jsonValue = JSON.stringify(optionsObject);
     await AsyncStorage.setItem('user-settings', jsonValue);
   }
@@ -204,7 +239,7 @@ function App(): JSX.Element {
       })
       .then(response => response.json())
       .then(data => {
-        data = data.info;
+        data = data.body;
         for (let i = 0; i < data.length; i++) {
           data[i].platform = 0;
           newAllData.push(data[i]);
@@ -240,7 +275,7 @@ function App(): JSX.Element {
       })
       .then(response => response.json())
       .then(data => {
-        data = data.info;
+        data = data.body;
         for (let i = 0; i < data.length; i++) {
           data[i].platform = 1;
           newAllData.push(data[i]);
@@ -276,7 +311,7 @@ function App(): JSX.Element {
       })
       .then(response => response.json())
       .then(data => {
-        data = data.info;
+        data = data.body;
         for (let i = 0; i < data.length; i++) {
           data[i].platform = 2;
           newAllData.push(data[i]);
@@ -327,6 +362,7 @@ function App(): JSX.Element {
                   <StreamerCard
                     key={dataObject.name + dataObject.platform}
                     dataObject={dataObject}
+                    displayThumbnails={displayThumbnails}
                   />
                 )}
               </>
@@ -336,6 +372,7 @@ function App(): JSX.Element {
                   <StreamerCard
                     key={dataObject.name + dataObject.platform}
                     dataObject={dataObject}
+                    displayThumbnails={displayThumbnails}
                   />
                 )}
               </>
@@ -346,6 +383,14 @@ function App(): JSX.Element {
               "w-12 h-6 bg-red-400 flex flex-row mx-auto mt-2 rounded-full cursor-pointer"}
             >
               <SView className={displayOffline ? "flex-grow" : ""}/>
+              <SView className="text-white bg-white rounded-full w-6 h-6"/>
+            </SPressable>
+            <SText className="mx-auto text-white font-bold mt-4">Display Thumbnails</SText>
+            <SPressable onPress={handleThumbnailToggle} className={displayThumbnails ? 
+              "w-12 h-6 bg-blue-500 flex flex-row mx-auto mt-2 rounded-full cursor-pointer" : 
+              "w-12 h-6 bg-red-400 flex flex-row mx-auto mt-2 rounded-full cursor-pointer"}
+            >
+              <SView className={displayThumbnails ? "flex-grow" : ""}/>
               <SView className="text-white bg-white rounded-full w-6 h-6"/>
             </SPressable>
           </SScrollView>
