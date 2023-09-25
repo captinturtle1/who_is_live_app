@@ -249,7 +249,7 @@ function App(): JSX.Element {
           currentLists={[twitchList, youtubeList, kickList]}
         />
       :
-        <SView className="flex h-full bg-slate-800 p-2">
+        <SView className="flex h-full bg-zinc-800 p-3">
           <SScrollView 
             className='flex-grow' 
             refreshControl={
@@ -292,7 +292,7 @@ function App(): JSX.Element {
               displayText={'Display Thumbnails'}
             />
           </SScrollView>
-          <SPressable className='bg-blue-500 p-2 mt-2 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
+          <SPressable className='bg-blue-500 p-2 mt-3 flex rounded' onPress={() => setIsAddRemoveOpen(true)}>
             <SText className='text-white font-bold text-lg m-auto'>Edit</SText>
           </SPressable>
         </SView>
