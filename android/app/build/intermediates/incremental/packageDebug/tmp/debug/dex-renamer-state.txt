@@ -1,13 +1,13 @@
-#Wed Sep 13 17:46:38 MDT 2023
-path.4=0/classes.dex
-path.3=2/classes.dex
-path.2=14/classes.dex
+#Sun Sep 24 21:18:52 MDT 2023
+path.4=2/classes.dex
+path.3=14/classes.dex
+path.2=0/classes.dex
 path.1=0/classes.dex
 path.0=classes.dex
-base.4=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
-base.3=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
-base.2=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\14\\classes.dex
-base.1=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.4=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
+base.3=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\14\\classes.dex
+base.2=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.1=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
 base.0=C\:\\Users\\austi\\projects\\who_is_live_app\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 renamed.3=classes4.dex
 renamed.2=classes3.dex

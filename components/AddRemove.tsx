@@ -75,7 +75,6 @@ export default function AddRemove({setIsAddRemoveOpen, setLists, currentLists}:a
       setValidInput(true);
     } else {
       setValidInput(false);
-      
     }
   }
 
