@@ -38,7 +38,7 @@ export default function StreamerCard({dataObject, displayThumbnails}:any) {
     return(
       <SPressable 
         onPress={() => loadInBrowser(dataObject.streamURL)}
-        className="bg-blue-500 rounded p-2 mb-3"
+        className="bg-blue-500 rounded p-2 mb-2"
       >
         <SView className='flex flex-row'>
           <SImage
