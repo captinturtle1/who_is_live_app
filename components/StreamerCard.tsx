@@ -25,7 +25,7 @@ const SEIcon = styled(EIcon);
 const calculateTime = (startedAt:number) => {
     let now = Date.now() / 1000;
     let elapsedTime = Math.round(now - startedAt);
-    let date = new Date();
+    let date = new Date(null);
     date.setSeconds(elapsedTime);
     return date.toISOString().slice(11, 19);
   }
