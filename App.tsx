@@ -10,7 +10,7 @@ import AddRemove from './components/AddRemove';
 import StreamerCard from './components/StreamerCard';
 import SliderToggle from './components/SliderToggle';
 
-let apiURL = 'https://api.isanyone.live';
+let apiURL = 'https://us-west1-is-anyone-live.cloudfunctions.net';
 
 const SView = styled(View);
 const SText = styled(Text);
