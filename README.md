@@ -1,19 +1,46 @@
-# IsAnyoneLive Native App
+# Who Is Live - React Native Application
 
-This is the mobile app version of [isanyone.live](https://isanyone.live/)
+### Download the mobile app from the Google Play Store [here](https://play.google.com/store/apps/details?id=com.who_is_live_app).
 
-Download the app on android on the [Google Play Store](https://play.google.com/store/apps/details?id=com.who_is_live_app)
+## Overview
 
-Is Anyone Live is an app that lets you keep track of streamers from Twitch, Youtube, and Kick.
+Welcome to the Who Is Live React Native application repository! This mobile app allows users to track various streamers across popular streaming platforms such as Twitch, Youtube, and Kick. The app provides real-time information, including stream title, live status, view count, stream category, and other relevant details.
 
-This app utilizes a custom API to gather data and display it a nicely formatted list.
+## Features
 
-## Relevant Repositories
+- **Real-time Data:** Get up-to-the-minute information on streamers' activities.
+- **Cross-Platform Support:** Track streamers on Twitch, Youtube, and Kick.
+- **Custom API Integration:** Utilizes a custom API for enhanced functionality.
+- **Responsive Design:** Developed using React Native, Native Wind, and TypeScript for a seamless cross-platform experience.
 
-[GCP API Cloud functions (Current API)](https://github.com/captinturtle1/isanyonelive-gcp-api)
+## Installation
 
-[AWS Lambda Functions](https://github.com/captinturtle1/isanyonelive-lambda)
+To run the app locally, follow these steps:
 
-[Express API](https://github.com/captinturtle1/who-is-live-api)
+1. Clone this repository:
 
-[Web version](https://github.com/captinturtle1/who-is-live)
+        git clone https://github.com/captinturtle1/who-is-live.git
+
+2. Navigate to the project directory:
+
+        cd who-is-live
+
+3. Install dependencies:
+
+        npm install
+
+4. Run the app:
+
+        npm run start
+
+## Web Version
+
+Check out the web version of Who Is Live [here](https://isanyone.live/). The web repository can be found on GitHub [here](https://github.com/captinturtle1/who-is-live).
+
+## API
+
+The app relies on a custom API for fetching data. The API repository can be found [here](https://github.com/captinturtle1/isanyonelive-gcp-api).
+
+## License
+
+This project is licensed under the MIT License.
