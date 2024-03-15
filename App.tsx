@@ -10,8 +10,6 @@ import AddRemove from './components/AddRemove';
 import StreamerCard from './components/StreamerCard';
 import SliderToggle from './components/SliderToggle';
 
-let apiURL = 'https://us-west1-is-anyone-live.cloudfunctions.net';
-
 const SView = styled(View);
 const SText = styled(Text);
 const SScrollView = styled(ScrollView);
@@ -135,7 +133,7 @@ function App(): JSX.Element {
     if (twitchData.length > 0) {
       setFetching(true);
       fetchingTwitch = true;
-      fetch(`${apiURL}/twitch`, {
+      fetch("https://twitch.api.isanyone.live", {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -171,7 +169,7 @@ function App(): JSX.Element {
     if (youtubeData.length > 0) {
       setFetching(true);
       fetchingYoutube = true;
-      fetch(`${apiURL}/youtube`, {
+      fetch("https://youtube.api.isanyone.live", {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -207,7 +205,7 @@ function App(): JSX.Element {
     if (kickData.length > 0) {
       setFetching(true);
       fetchingKick = true;
-      fetch(`${apiURL}/kick`, {
+      fetch("https://kick.api.isanyone.live", {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

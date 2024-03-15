@@ -95,7 +95,7 @@ export default function StreamerCard({dataObject, displayThumbnails}:any) {
           <SText className="text-white flex-1 flex-wrap my-1">{dataObject.streamTitle}</SText>
           {displayThumbnails ? 
             <SImage
-              source={{ uri: dataObject.streamThumbnail + '?' + new Date()}}
+              source={{ uri: dataObject.streamThumbnail + '?' + new Date().getTime()}}
               resizeMode='cover'
               className='aspect-[16/9] rounded'
             />
