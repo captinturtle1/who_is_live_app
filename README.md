@@ -35,7 +35,7 @@ To run the app locally, follow these steps:
 
 ## Web Version
 
-Check out the web version of Who Is Live [here](https://isanyone.live/). The web repository can be found on GitHub [here](https://github.com/captinturtle1/who-is-live).
+Check out the web version of Who Is Live [here](https://isanyonelive.xyz/). The web repository can be found on GitHub [here](https://github.com/captinturtle1/who-is-live).
 
 ## API
 

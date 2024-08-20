@@ -15,6 +15,10 @@ const SText = styled(Text);
 const SScrollView = styled(ScrollView);
 const SPressable = styled(Pressable);
 
+const twitchAPIEndpoint = "https://twitch.api.isanyonelive.xyz";
+const youtubeAPIEndpoint = "https://youtube.api.isanyonelive.xyz";
+const kickAPIEndpoint = "https://kick.api.isanyonelive.xyz";
+
 function App(): JSX.Element {
   const [twitchList, setTwitchList] = useState<string[]>([]);
   const [youtubeList, setYoutubeList] = useState<string[]>([]);
@@ -133,7 +137,7 @@ function App(): JSX.Element {
     if (twitchData.length > 0) {
       setFetching(true);
       fetchingTwitch = true;
-      fetch("https://twitch.api.isanyone.live", {
+      fetch(twitchAPIEndpoint, {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -169,7 +173,7 @@ function App(): JSX.Element {
     if (youtubeData.length > 0) {
       setFetching(true);
       fetchingYoutube = true;
-      fetch("https://youtube.api.isanyone.live", {
+      fetch(youtubeAPIEndpoint, {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -205,7 +209,7 @@ function App(): JSX.Element {
     if (kickData.length > 0) {
       setFetching(true);
       fetchingKick = true;
-      fetch("https://kick.api.isanyone.live", {
+      fetch(kickAPIEndpoint, {
         mode: 'cors',
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
